@@ -61,20 +61,27 @@
   .zoomer .pct:hover { color:var(--accent); }
   .block { position:absolute; background:var(--card); border:1px solid var(--rule);
     border-radius:10px; display:flex; flex-direction:column; overflow:hidden;
-    box-shadow:var(--lift); }
+    box-shadow:var(--lift); cursor:default; }
   .block.lift { box-shadow:0 18px 44px -18px rgba(31,38,47,.34); border-color:#C9D3CE; }
   .bhead { display:flex; align-items:center; gap:8px; padding:10px 13px 9px;
     border-bottom:1px solid var(--rule); cursor:grab; user-select:none; flex-shrink:0; }
   .dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; background:var(--muted); }
   button.dot { width:11px; height:11px; border:none; padding:0; cursor:pointer; }
   button.dot:hover { transform:scale(1.25); }
-  .evform { background:var(--card); border:1px solid var(--rule); border-radius:9px;
-    padding:14px 16px 16px; margin:8px 0 12px; box-shadow:var(--lift); }
+  .evform { position:relative; background:var(--card); border:1px solid var(--rule);
+    border-radius:9px; padding:14px 16px 16px; margin:8px 0 12px; box-shadow:var(--lift); }
+  .evclose { position:absolute; top:9px; right:11px; background:none; border:none;
+    font-family:inherit; font-size:16px; line-height:1; color:var(--muted); cursor:pointer;
+    padding:2px 4px; }
+  .evclose:hover { color:var(--ink); }
+  .evform .line { padding-right:26px; }
   .evform .line { font-size:16px; }
   .evrow { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:12px; }
   .evform select.flat, .evform input.flat { border-bottom:1px solid var(--rule); padding:5px 0;
-    color:var(--ink); }
-  .evform select.flat { margin-top:12px; width:auto; }
+    color:var(--ink); width:auto; }
+  .evform input[type="date"].flat { min-width:140px; }
+  .evform input[type="time"].flat { min-width:92px; }
+  .evform select.flat { margin-top:12px; }
   .evform .tiny { margin:12px 0 0; line-height:1.55; }
   .evtitle { flex:1; text-align:left; background:none; border:none; font-family:inherit;
     font-size:inherit; color:var(--ink); cursor:pointer; padding:0; line-height:1.45; }
@@ -100,7 +107,7 @@
   .bhead .kill { background:none; border:none; color:var(--muted); font-size:15px;
     cursor:pointer; padding:0 2px; line-height:1; opacity:0; }
   .block:hover .kill, .kill:focus-visible { opacity:1; }
-  .bbody { flex:1; overflow:auto; padding:12px; }
+  .bbody { flex:1; overflow:auto; padding:12px; cursor:default; }
   .block.bare { background:transparent; border-color:transparent; box-shadow:none; }
   .block.bare.lift { box-shadow:none; }
   .block.bare .bhead { border-bottom:none; opacity:0; }
@@ -204,6 +211,44 @@
   .card textarea:focus { outline:none; }
   .card .meta { display:flex; justify-content:space-between; align-items:center;
     margin-top:9px; color:var(--muted); font-size:12.5px; }
+  .month { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:1px;
+    background:var(--rule); border:1px solid var(--rule); border-radius:9px;
+    overflow:hidden; margin-top:16px; width:100%; }
+  .mhead { background:var(--paper); padding:7px 6px; font-size:12px; color:var(--muted);
+    text-align:center; }
+  .mcell { background:var(--card); min-height:92px; padding:7px 7px 9px;
+    min-width:0; overflow:hidden; display:flex; flex-direction:column; }
+  .mcell.today { box-shadow:inset 0 2px 0 var(--accent); }
+  .mcell.today .mnum { color:var(--accent); font-weight:600; }
+  .mnum { font-size:12.5px; color:var(--muted); display:block; margin-bottom:4px;
+    letter-spacing:.01em; }
+  .pill { display:block; width:100%; min-width:0; margin-top:3px; padding:3px 7px;
+    border:none; border-radius:5px; font-family:inherit; font-size:11.5px; line-height:1.35;
+    text-align:left; color:#fff; cursor:pointer; overflow:hidden; text-overflow:ellipsis;
+    white-space:nowrap; opacity:.92; }
+  .pill:hover { opacity:1; }
+  .pill.pdone { text-decoration:line-through; opacity:.45; }
+  .ev .x { opacity:0; margin-left:auto; }
+  .ev:hover .x, .ev .x:focus-visible { opacity:1; }
+  .ev.evdone .evtitle { text-decoration:line-through; color:var(--muted); }
+  .ev.evdone time { opacity:.6; }
+  .feedday { font-size:12px; color:var(--muted); margin:12px 0 1px; }
+  .bbody { scrollbar-width:thin; }
+  .bbody::-webkit-scrollbar { width:7px; }
+  .bbody::-webkit-scrollbar-thumb { background:var(--rule); border-radius:4px; }
+  .bbody::-webkit-scrollbar-thumb:hover { background:#C7D0CB; }
+  .pill b { font-weight:600; margin-right:4px; opacity:.85; }
+  .drop { outline:2px dashed var(--accent); outline-offset:-3px; border-radius:4px; }
+  .day.drop { outline-offset:2px; }
+  .grab { cursor:grab; }
+  .planwrap { display:grid; grid-template-columns:262px 1fr; gap:30px; align-items:start;
+    margin-top:22px; }
+  .planside { position:sticky; top:80px; }
+  .planside .card { margin-top:0; }
+  @media (max-width:880px) {
+    .planwrap { grid-template-columns:1fr; gap:10px; }
+    .planside { position:static; }
+  }
   .day { border-top:1px solid var(--rule); padding:13px 0 4px; }
   .day h3 { margin:0 0 7px; font-size:15px; }
   .navrow { display:flex; align-items:center; gap:9px; margin-top:20px; flex-wrap:wrap; }
@@ -245,10 +290,10 @@
 (function () {
   var KEY = "braindump:v4";
   var QUADS = [
-    { id:"do",       label:"Do first", blurb:"Urgent and important",  hint:"Today, no negotiating." },
-    { id:"schedule", label:"Schedule", blurb:"Important, not urgent", hint:"Give it a date." },
-    { id:"delegate", label:"Quick wins", blurb:"Small and urgent", hint:"Batch them. One 20-minute sweep, then done." },
-    { id:"drop",     label:"Let go",   blurb:"Neither",               hint:"You're allowed." }
+    { id:"do",       label:"Do first", blurb:"Urgent and important" },
+    { id:"schedule", label:"Schedule", blurb:"Important, not urgent" },
+    { id:"delegate", label:"Boredom list", blurb:"Instead of doomscrolling" },
+    { id:"drop",     label:"Let go",   blurb:"Neither urgent nor important" }
   ];
   var BLOCK_TYPES = [
     { type:"dump",      name:"Brain dump",    w:330, h:300 },
@@ -257,7 +302,7 @@
     { type:"countdown", name:"Countdown",     w:250, h:200 },
     { type:"habits",    name:"Habits",        w:330, h:250 },
     { type:"scratch",   name:"Scratch pad",   w:330, h:250 },
-    { type:"calendar",  name:"Up next",       w:330, h:280 },
+    { type:"calendar",  name:"Up next",       w:340, h:440 },
     { type:"text",      name:"Text",          w:300, h:120 },
     { type:"image",     name:"Image",         w:300, h:230 }
   ];
@@ -267,7 +312,7 @@
   function uid0() { return String(Date.now()) + Math.random().toString(36).slice(2, 7); }
 
   var db = { tasks:[], notes:[], journal:[], events:[], calName:null, calAt:null,
-             blocks:[], habits:[], calendars:[], eventColors:{}, eventEdits:{}, eventDeleted:{}, google:{clientId:"", syncedAt:null}, seeded:false, z:10, zoom:1, sx:null, sy:null, centred:false };
+             blocks:[], habits:[], calendars:[], eventColors:{}, eventEdits:{}, eventDeleted:{}, eventDone:{}, google:{clientId:"", syncedAt:null}, seeded:false, z:10, zoom:1, sx:null, sy:null, centred:false };
   var canSave = true, view = "sheet", skipped = {}, planOffset = 0, saveTimer = null;
   var stacked = false;
 
@@ -298,7 +343,17 @@
   if (!db.eventColors) db.eventColors = {};
   if (!db.eventEdits) db.eventEdits = {};
   if (!db.eventDeleted) db.eventDeleted = {};
+  if (!db.eventDone) db.eventDone = {};
+  // the separate to-do block was folded into Up next
+  db.blocks.forEach(function (b) {
+    if (b.type === "todo") {
+      b.type = "calendar";
+      b.items = b.items || [];
+      delete b.feed; delete b.tasksFeed;
+    }
+  });
   if (!db.google) db.google = { clientId:"", syncedAt:null };
+  if (db.planMode === "month" || db.planMode === "week") planMode = db.planMode;
 
   // migrate a single imported calendar into the multi-calendar shape
   if (db.events.length && !db.calendars.length) {
@@ -338,7 +393,7 @@
   function unsorted() {
     return db.tasks.filter(function (i) { return i.quad == null && !skipped[i.id]; });
   }
-  function taskRow(item, after) {
+  function taskRow(item, after, opts) {
     var row = el("div", "row" + (item.done ? " done" : ""));
     var c = el("button", "check" + (item.done ? " on" : ""));
     c.setAttribute("aria-label", item.done ? "Mark as not done" : "Mark as done");
@@ -350,6 +405,12 @@
     c.onclick = function () { item.done = !item.done; save(); after(); };
     row.appendChild(c);
     row.appendChild(el("span", "text", item.text));
+    if (opts && opts.schedule) {
+      var sc = el("button", "move", "schedule");
+      sc.title = "Put this in the calendar";
+      sc.onclick = function () { opts.schedule(); };
+      row.appendChild(sc);
+    }
     var mv = el("button", "move", "move");
     mv.setAttribute("aria-label", "Move back to unsorted");
     mv.onclick = function () { item.quad = null; delete skipped[item.id]; save(); after(); };
@@ -578,6 +639,32 @@
       .map(evView)
       .filter(function (e) { return !hidden[e.calId]; });
   }
+  function evDone(id) { return !!db.eventDone[id]; }
+  function toggleEvDone(id) {
+    if (db.eventDone[id]) delete db.eventDone[id];
+    else db.eventDone[id] = true;
+    save();
+  }
+  function tickBox(on, onClick, label) {
+    var c = el("button", "check" + (on ? " on" : ""));
+    c.setAttribute("aria-label", (on ? "Mark as not done: " : "Mark as done: ") + (label || ""));
+    if (on) {
+      c.innerHTML = '<svg width="9" height="9" viewBox="0 0 12 12" fill="none">' +
+        '<path d="M2.5 6.5L4.8 8.8L9.5 3.5" stroke="#fff" stroke-width="1.9" ' +
+        'stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    }
+    c.onclick = function (e) { e.stopPropagation(); onClick(); };
+    return c;
+  }
+  function eventsNextWeek() {
+    var from = new Date(); from.setHours(0, 0, 0, 0);
+    var to = new Date(from.getTime() + 7 * 86400000);
+    return visibleEvents()
+      .map(function (e) { return { t:new Date(e.start), e:e }; })
+      .filter(function (o) { return o.t >= from && o.t < to; })
+      .sort(function (a, b) { return a.t - b.t; });
+  }
+
   function localCalendar() {
     var mine = db.calendars.filter(function (c) { return c.local; })[0];
     if (mine) return mine;
@@ -589,9 +676,9 @@
   function isoLocal(d) {
     return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 19);
   }
-  function saveEvent(orig, fields) {
+  function saveEvent(orig, fields, done) {
     var target = calById(fields.calId);
-    if (target && target.google && gLive()) { gSaveEvent(orig, fields, target); return; }
+    if (target && target.google && gLive()) { gSaveEvent(orig, fields, target, done); return; }
     if (orig && orig.local) {
       var real = db.events.filter(function (e) { return e.id === orig.id; })[0];
       if (real) {
@@ -604,6 +691,7 @@
       db.events.push({ id:uid(), calId:fields.calId, title:fields.title, start:fields.start,
                        end:fields.end, allDay:fields.allDay, local:true });
     }
+    if (done) done();
     save(); render();
   }
   function deleteEvent(ev) {
@@ -617,14 +705,53 @@
     }
     save(); render(); flash("Event removed.");
   }
-  function eventForm(ev, defaultDate, onClose) {
+  function defaultCalendar() {
+    var g = db.calendars.filter(function (c) { return c.google && !c.hidden; })[0];
+    return g || localCalendar();
+  }
+  function scheduleTaskOn(taskId, dateObj) {
+    var t = db.tasks.filter(function (q) { return q.id === taskId; })[0];
+    if (!t) return;
+    var d = new Date(dateObj.getTime());
+    d.setHours(0, 0, 0, 0);
+    var cal = defaultCalendar();
+    saveEvent(null, { title:t.text, start:d.toISOString(), end:null, allDay:true, calId:cal.id },
+      function () { db.tasks = db.tasks.filter(function (q) { return q.id !== t.id; }); });
+    flash("Added as all-day \u2014 click it to set a time.");
+  }
+  function dropTarget(node, dateObj) {
+    node.addEventListener("dragover", function (e) {
+      if (!e.dataTransfer || e.dataTransfer.types.indexOf("text/task-id") < 0) return;
+      e.preventDefault();
+      node.classList.add("drop");
+    });
+    node.addEventListener("dragleave", function () { node.classList.remove("drop"); });
+    node.addEventListener("drop", function (e) {
+      node.classList.remove("drop");
+      if (!e.dataTransfer) return;
+      var id = e.dataTransfer.getData("text/task-id");
+      if (!id) return;
+      e.preventDefault();
+      scheduleTaskOn(id, dateObj);
+    });
+  }
+
+  function eventForm(ev, defaultDate, onClose, opts) {
+    opts = opts || {};
     var box = el("div", "evform");
+    var closeBtn = el("button", "evclose", "\u00D7");
+    closeBtn.setAttribute("aria-label", "Close");
+    closeBtn.onclick = function () { onClose(); };
+    box.appendChild(closeBtn);
     var start = ev ? new Date(ev.start) : (defaultDate || new Date());
     if (!ev && defaultDate) start.setHours(9, 0, 0, 0);
+    if (!ev && opts.roundUp) {
+      start.setHours(start.getHours() + 1, 0, 0, 0);
+    }
 
     var title = el("input", "line");
     title.placeholder = "What is it?";
-    title.value = ev ? ev.title : "";
+    title.value = ev ? ev.title : (opts.title || "");
     box.appendChild(title);
 
     var endAt = (ev && ev.end) ? new Date(ev.end) : new Date(start.getTime() + 3600000);
@@ -707,7 +834,7 @@
       }
       var calId = pick.value === "__new" ? localCalendar().id : pick.value;
       saveEvent(ev, { title:t, start:d.toISOString(), end:endISO,
-                      allDay:allDay.checked, calId:calId });
+                      allDay:allDay.checked, calId:calId }, opts.onSaved);
     };
     actions.appendChild(ok);
 
@@ -725,9 +852,6 @@
         actions.appendChild(rst);
       }
     }
-    var cancel = el("button", "btn quiet", "Cancel");
-    cancel.onclick = function () { onClose(); };
-    actions.appendChild(cancel);
     box.appendChild(actions);
 
     if (ev && !ev.local) {
@@ -802,7 +926,7 @@
       };
       body.appendChild(add);
       if (!db.notes.length) {
-        body.appendChild(el("p", "dim", "Nothing kept yet.")).style.marginTop = "12px";
+        body.appendChild(el("p", "dim", "No notes yet.")).style.marginTop = "12px";
         return;
       }
       db.notes.slice(0, 8).forEach(function (n) {
@@ -823,7 +947,7 @@
       body.appendChild(el("p", "tiny", prettyDay(new Date()))).style.margin = "0 0 8px";
       var ta = el("textarea", "flat");
       ta.value = entry.body;
-      ta.placeholder = "How was today? What's sitting with you?";
+      ta.placeholder = "How was today?";
       ta.oninput = function () { entry.body = ta.value; saveSoon(); };
       body.appendChild(ta);
       var open = el("button", "btn quiet", "past entries");
@@ -889,7 +1013,7 @@
       var labels = ["M","T","W","T","F","S","S"];
 
       if (!db.habits.length) {
-        body.appendChild(el("p", "dim", "Add one small thing you want to do most days."));
+        body.appendChild(el("p", "dim", "No habits yet."));
       }
       db.habits.forEach(function (h) {
         var r = el("div", "habit");
@@ -935,7 +1059,7 @@
     if (b.type === "text") {
       var tx = el("textarea", "canvastext ts-" + (b.size || "m"));
       tx.value = b.text || "";
-      tx.placeholder = "Type something.";
+      tx.placeholder = "Text";
       tx.oninput = function () { b.text = tx.value; saveSoon(); };
       body.appendChild(tx);
       return;
@@ -973,44 +1097,108 @@
     if (b.type === "scratch") {
       var st = el("textarea", "flat");
       st.value = b.text || "";
-      st.placeholder = "Anything. It doesn't have to mean something.";
+      st.placeholder = "Scratch space.";
       st.oninput = function () { b.text = st.value; saveSoon(); };
       body.appendChild(st);
       return;
     }
 
     if (b.type === "calendar") {
-      var next = upcoming(12);
+      if (!b.items) b.items = [];
+
+      var addTask = el("input", "line");
+      addTask.placeholder = "Add a task\u2026";
+      addTask.style.marginBottom = "2px";
+      addTask.onkeydown = function (e) {
+        if (e.key !== "Enter") return;
+        var t = addTask.value.trim(); if (!t) return;
+        b.items.push({ id:uid(), text:t, done:false });
+        addTask.value = ""; save(); refresh(true);
+      };
+      body.appendChild(addTask);
+
+      b.items.forEach(function (it) {
+        var ri = el("div", "row" + (it.done ? " done" : ""));
+        ri.appendChild(tickBox(it.done, function () {
+          it.done = !it.done; save(); refresh(false);
+        }, it.text));
+        ri.appendChild(el("span", "text", it.text));
+        var xi = el("button", "x", "\u00D7");
+        xi.setAttribute("aria-label", "Remove");
+        xi.onclick = function () {
+          b.items = b.items.filter(function (q) { return q.id !== it.id; });
+          save(); refresh(false);
+        };
+        ri.appendChild(xi);
+        body.appendChild(ri);
+      });
+
+      var doneOwn = b.items.filter(function (i) { return i.done; }).length;
+      if (doneOwn) {
+        var clr = el("button", "btn quiet", "Clear " + doneOwn + " done");
+        clr.style.margin = "8px 0 2px";
+        clr.onclick = function () {
+          b.items = b.items.filter(function (i) { return !i.done; });
+          save(); refresh(false);
+        };
+        body.appendChild(clr);
+      }
+
+      var firstsUp = db.tasks.filter(function (t) { return t.quad === "do"; });
+      if (firstsUp.length) {
+        body.appendChild(el("p", "feedday", "Do first"));
+        firstsUp.forEach(function (t) {
+          var rt = el("div", "row" + (t.done ? " done" : ""));
+          rt.appendChild(tickBox(t.done, function () {
+            t.done = !t.done; save(); refresh(false);
+          }, t.text));
+          var dt = el("span", "dot");
+          dt.style.background = "#A0503F";
+          dt.style.marginTop = "7px";
+          dt.title = "Do first";
+          rt.appendChild(dt);
+          rt.appendChild(el("span", "text", t.text));
+          body.appendChild(rt);
+        });
+      }
+
       if (!db.calendars.length) {
         body.appendChild(el("p", "dim",
-          "No calendars yet. Export them from Google Calendar as .ics and import them in the Plan view."));
+          "No calendars yet. Connect Google or import a .ics in the Plan view."))
+            .style.marginTop = "10px";
         var go = el("button", "btn", "Open Plan");
         go.style.marginTop = "10px";
         go.onclick = function () { view = "plan"; render(); };
         body.appendChild(go);
         return;
       }
-      if (!next.length) { body.appendChild(el("p", "dim", "Nothing coming up in what you imported.")); return; }
+
+      var next = eventsNextWeek();
+      if (!next.length) {
+        body.appendChild(el("p", "dim", "Nothing in the calendar this week."))
+            .style.marginTop = "10px";
+        return;
+      }
       var lastDay = "";
       next.forEach(function (o) {
         var dayKey = iso(o.t);
         if (dayKey !== lastDay) {
           lastDay = dayKey;
-          var h = el("p", "tiny", o.t.toLocaleDateString(undefined,
-            { weekday:"short", day:"numeric", month:"short" }));
-          h.style.margin = "12px 0 2px";
-          body.appendChild(h);
+          body.appendChild(el("p", "feedday", o.t.toLocaleDateString(undefined,
+            { weekday:"short", day:"numeric", month:"short" })));
         }
-        var r = el("div", "ev");
-        r.appendChild(el("time", null, o.e.allDay ? "all day" :
-          o.t.toLocaleTimeString(undefined, { hour:"2-digit", minute:"2-digit" })));
+        var on = evDone(o.e.id);
+        var r = el("div", "row" + (on ? " done" : ""));
+        r.appendChild(tickBox(on, function () { toggleEvDone(o.e.id); refresh(false); }, o.e.title));
         var cd = el("span", "dot");
         cd.style.background = eventColor(o.e);
-        cd.style.marginTop = "6px";
+        cd.style.marginTop = "7px";
         var cal = calById(o.e.calId);
         if (cal) cd.title = cal.name;
         r.appendChild(cd);
-        r.appendChild(el("span", null, o.e.title));
+        r.appendChild(el("span", "text",
+          (o.e.allDay ? "" : o.t.toLocaleTimeString(undefined,
+            { hour:"2-digit", minute:"2-digit" }) + "  ") + o.e.title));
         body.appendChild(r);
       });
       return;
@@ -1233,7 +1421,8 @@
       var head = el("div", "bhead");
       var meta = BLOCK_TYPES.filter(function (t) { return t.type === b.type; })[0] || { name:b.type };
       if (!bare) head.appendChild(el("span", "dot " + b.type));
-      head.appendChild(el("h2", "serif", b.type === "countdown" && b.label ? b.label : meta.name));
+      head.appendChild(el("h2", "serif",
+        ((b.type === "countdown" || b.type === "calendar") && b.label) ? b.label : meta.name));
       if (b.type === "text") {
         var sizes = ["s", "m", "l"];
         var sz = el("button", "kill", "Aa");
@@ -1270,9 +1459,23 @@
       var body = el("div", "bbody");
       node.appendChild(body);
 
+      var VIEW_FOR = { dump:"dump", notes:"notes", journal:"journal", calendar:"plan" };
+      if (VIEW_FOR[b.type]) {
+        head.title = "Drag to move \u00B7 double-click to open";
+        node.addEventListener("dblclick", function (e) {
+          var t = e.target.tagName;
+          if (t === "INPUT" || t === "TEXTAREA" || t === "SELECT" || t === "BUTTON") return;
+          view = VIEW_FOR[b.type];
+          render();
+        });
+      }
+
       function refresh(focusInput) {
         fillBlock(b, body, refresh);
-        head.firstChild.textContent = b.type === "countdown" && b.label ? b.label : meta.name;
+        head.lastChild.previousSibling;
+        var hTitle = head.querySelector("h2");
+        if (hTitle) hTitle.textContent =
+          ((b.type === "countdown" || b.type === "calendar") && b.label) ? b.label : meta.name;
         if (focusInput) {
           var f = body.querySelector("input.line");
           if (f) f.focus();
@@ -1280,6 +1483,7 @@
       }
       fillBlock(b, body, refresh);
 
+      if (b.type === "image") body.style.cursor = "grab";
       if (!stacked) {
         var grip = el("div", "grip");
         node.appendChild(grip);
@@ -1356,6 +1560,8 @@
     });
   }
 
+  var pendingSchedule = null;
+  var planMode = "week", monthOffset = 0;
   var prevLayout = null;
   function tidy() {
     if (!db.blocks.length) { flash("Nothing to tidy yet."); return; }
@@ -1412,6 +1618,7 @@
     var b = { id:uid(), type:type, x:pos.x, y:pos.y, w:meta.w, h:meta.h, z:db.z };
     if (type === "countdown") { b.label = ""; b.date = ""; }
     if (type === "scratch") b.text = "";
+    if (type === "calendar") { b.label = ""; b.items = []; }
     db.blocks.push(b);
     save(); render();
     flash(meta.name + " added.");
@@ -1461,9 +1668,14 @@
         var list = db.tasks.filter(function (i) { return i.quad === q.id; });
         var cell = el("div", "cell " + q.id);
         cell.appendChild(el("h2", "serif", q.label));
-        cell.appendChild(el("p", "hint", q.hint));
+        cell.appendChild(el("p", "hint", q.blurb));
         if (!list.length) cell.appendChild(el("p", "dim", "Empty."));
-        else list.forEach(function (i) { cell.appendChild(taskRow(i, render)); });
+        else list.forEach(function (i) {
+          var canSchedule = (q.id === "do" || q.id === "schedule") && !i.done;
+          cell.appendChild(taskRow(i, render, canSchedule ? {
+            schedule: function () { pendingSchedule = i.id; view = "plan"; render(); }
+          } : null));
+        });
         grid2.appendChild(cell);
       });
       host.appendChild(grid2);
@@ -1471,7 +1683,7 @@
 
     if (!db.tasks.length) {
       host.appendChild(el("p", "note",
-        "Start with whatever's loudest. It doesn't have to be the important one."));
+        "Nothing here yet."));
       return;
     }
     var foot = el("div", "foot");
@@ -1505,7 +1717,7 @@
     host.appendChild(add);
     if (!db.notes.length) {
       host.appendChild(el("p", "note",
-        "Notes are for things you want to keep, not things you have to do."));
+        "No notes yet."));
       return;
     }
     db.notes.forEach(function (n) {
@@ -1542,7 +1754,7 @@
     card.appendChild(h);
     var ta = el("textarea");
     ta.value = entry.body;
-    ta.placeholder = "How was today? What's sitting with you?";
+    ta.placeholder = "How was today?";
     ta.style.minHeight = "150px";
     ta.oninput = function () { entry.body = ta.value; saveSoon(); };
     card.appendChild(ta);
@@ -1550,7 +1762,7 @@
 
     var past = db.journal.filter(function (e) { return e.date !== today && e.body.trim(); })
                          .sort(function (a, b) { return a.date < b.date ? 1 : -1; });
-    if (!past.length) { host.appendChild(el("p", "note", "Past entries will collect here.")); return; }
+    if (!past.length) { host.appendChild(el("p", "note", "No past entries yet.")); return; }
     past.forEach(function (e) {
       var c = el("div", "card");
       var hd = el("div", "serif", prettyDay(new Date(e.date + "T12:00:00")));
@@ -1689,14 +1901,17 @@
              start:{ dateTime:start.toISOString() }, end:{ dateTime:end.toISOString() } };
   }
 
-  function gSaveEvent(orig, fields, cal) {
+  function gSaveEvent(orig, fields, cal, done) {
     gAuth(false, function () {
       var base = "https://www.googleapis.com/calendar/v3/calendars/" +
                  encodeURIComponent(cal.gid) + "/events";
       var url = (orig && orig.gid) ? base + "/" + encodeURIComponent(orig.gid) : base;
       gFetch(url, { method:(orig && orig.gid) ? "PATCH" : "POST",
                     body:JSON.stringify(gBody(fields)) },
-        function () { gSyncCalendar(cal, function () { save(); render(); flash("Saved to Google."); }); },
+        function () {
+          if (done) done();
+          gSyncCalendar(cal, function () { save(); render(); flash("Saved to Google."); });
+        },
         function (code) { flash(code === 403 ? "Google refused that edit." : "Save failed."); });
     });
   }
@@ -1853,17 +2068,176 @@
       host.appendChild(tip);
     }
 
+    // tasks waiting for a slot, in a column of their own
+    var waiting = db.tasks.filter(function (t) {
+      return (t.quad === "do" || t.quad === "schedule") && !t.done;
+    });
+    var main = el("div");
+    if (waiting.length) {
+      var grid = el("div", "planwrap");
+      var side = el("div", "planside");
+      var box = el("div", "card");
+      var bh = el("div", "serif", "To schedule");
+      bh.style.cssText = "font-size:17px;padding-bottom:2px;";
+      box.appendChild(bh);
+      box.appendChild(el("p", "tiny", "Click one to give it a slot."))
+         .style.margin = "0 0 6px";
+      var autoOpen = null;
+      waiting.forEach(function (t) {
+        var r = el("div", "row");
+        var d = el("span", "dot");
+        d.style.background = t.quad === "do" ? "#A0503F" : "#3F6F63";
+        d.style.marginTop = "7px";
+        d.title = t.quad === "do" ? "Do first" : "Schedule";
+        r.appendChild(d);
+        var b = el("button", "evtitle grab", t.text);
+        b.draggable = true;
+        b.addEventListener("dragstart", function (e) {
+          e.dataTransfer.setData("text/task-id", t.id);
+          e.dataTransfer.effectAllowed = "move";
+        });
+        function open() {
+          var slot = el("div");
+          box.insertBefore(slot, r.nextSibling);
+          if (!db.calendars.length) { localCalendar(); save(); }
+          slot.appendChild(eventForm(null, new Date(), function () { slot.remove(); }, {
+            title: t.text,
+            roundUp: true,
+            onSaved: function () {
+              db.tasks = db.tasks.filter(function (q) { return q.id !== t.id; });
+            }
+          }));
+        }
+        b.onclick = open;
+        if (pendingSchedule === t.id) autoOpen = open;
+        r.appendChild(b);
+        box.appendChild(r);
+      });
+      side.appendChild(box);
+      grid.append(side, main);
+      host.appendChild(grid);
+      if (autoOpen) setTimeout(autoOpen, 0);
+    } else {
+      host.appendChild(main);
+    }
+    pendingSchedule = null;
+    host = main;
+
     var nav = el("div", "navrow");
     var prev = el("button", "btn", "\u2190");
-    prev.setAttribute("aria-label", "Previous week");
-    prev.onclick = function () { planOffset -= 7; render(); };
+    prev.setAttribute("aria-label", "Back");
+    prev.onclick = function () {
+      if (planMode === "month") monthOffset -= 1; else planOffset -= 7;
+      render();
+    };
     var next = el("button", "btn", "\u2192");
-    next.setAttribute("aria-label", "Next week");
-    next.onclick = function () { planOffset += 7; render(); };
+    next.setAttribute("aria-label", "Forward");
+    next.onclick = function () {
+      if (planMode === "month") monthOffset += 1; else planOffset += 7;
+      render();
+    };
     var todayBtn = el("button", "btn quiet", "Today");
-    todayBtn.onclick = function () { planOffset = 0; render(); };
-    nav.append(prev, next, todayBtn);
+    todayBtn.onclick = function () { planOffset = 0; monthOffset = 0; render(); };
+    var modeBtn = el("button", "btn", planMode === "week" ? "Month view" : "Week view");
+    modeBtn.onclick = function () {
+      planMode = planMode === "week" ? "month" : "week";
+      db.planMode = planMode; save(); render();
+    };
+    nav.append(prev, next, todayBtn, modeBtn);
     host.appendChild(nav);
+
+    function eventsBetween(from, to) {
+      return visibleEvents().map(function (e) { return { t:new Date(e.start), e:e }; })
+        .filter(function (o) { return o.t >= from && o.t < to; })
+        .sort(function (a, b) { return a.t - b.t; });
+    }
+    function timeStamp(o) {
+      return o.e.allDay ? "all day"
+        : o.t.toLocaleTimeString(undefined, { hour:"2-digit", minute:"2-digit" }) +
+          (o.e.end ? "\u2013" + new Date(o.e.end).toLocaleTimeString(undefined,
+            { hour:"2-digit", minute:"2-digit" }) : "");
+    }
+    function colourDot(ev, top) {
+      var d2 = el("button", "dot");
+      d2.style.background = eventColor(ev);
+      d2.style.marginTop = top;
+      var c = calById(ev.calId);
+      d2.title = (c ? c.name + " \u2014 " : "") + "click to recolour";
+      d2.setAttribute("aria-label", "Colour for " + ev.title);
+      d2.onclick = function (e) {
+        e.stopPropagation();
+        openSwatches(d2, eventColor(ev), function (col) {
+          db.eventColors[ev.id] = col; save(); render();
+        }, function () {
+          delete db.eventColors[ev.id]; save(); render();
+        });
+      };
+      return d2;
+    }
+    function openEditor(ev, container, after) {
+      var slot = el("div");
+      container.insertBefore(slot, after ? after.nextSibling : null);
+      slot.appendChild(eventForm(ev, null, function () { slot.remove(); }));
+    }
+    function openAdder(dayDate, container, after) {
+      if (!db.calendars.length) { localCalendar(); save(); }
+      var slot = el("div");
+      container.insertBefore(slot, after ? after.nextSibling : null);
+      slot.appendChild(eventForm(null, new Date(dayDate.getTime()),
+        function () { slot.remove(); }));
+    }
+
+    if (planMode === "month") {
+      var anchor = new Date();
+      anchor.setHours(0, 0, 0, 0);
+      anchor.setDate(1);
+      anchor.setMonth(anchor.getMonth() + monthOffset);
+
+      var heading = el("h3", "serif",
+        anchor.toLocaleDateString(undefined, { month:"long", year:"numeric" }));
+      heading.style.margin = "18px 0 0";
+      host.appendChild(heading);
+
+      var gridM = el("div", "month");
+      ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].forEach(function (n) {
+        gridM.appendChild(el("div", "mhead", n));
+      });
+
+      var first = new Date(anchor.getTime());
+      first.setDate(1 - ((first.getDay() + 6) % 7));
+      var todayIso2 = iso(new Date());
+
+      for (var m = 0; m < 42; m++) {
+        (function (m) {
+          var cd = new Date(first.getTime());
+          cd.setDate(first.getDate() + m);
+          var cell = el("div", "mcell" + (iso(cd) === todayIso2 ? " today" : ""));
+          var num = el("span", "mnum", String(cd.getDate()));
+          cell.appendChild(num);
+          num.style.cursor = "pointer";
+          num.title = "Add an event";
+          num.onclick = function () { openAdder(cd, host, heading); };
+
+          eventsBetween(cd, new Date(cd.getTime() + 86400000)).forEach(function (o) {
+            var pill = el("button", "pill" + (evDone(o.e.id) ? " pdone" : ""));
+            pill.style.background = eventColor(o.e);
+            if (!o.e.allDay) {
+              pill.appendChild(el("b", null, o.t.toLocaleTimeString(undefined,
+                { hour:"2-digit", minute:"2-digit" })));
+            }
+            pill.appendChild(document.createTextNode(o.e.title));
+            pill.title = o.e.title;
+            pill.onclick = function () { openEditor(o.e, host, heading); };
+            cell.appendChild(pill);
+          });
+
+          dropTarget(cell, cd);
+          gridM.appendChild(cell);
+        })(m);
+      }
+      host.appendChild(gridM);
+      return;
+    }
 
     var base = new Date();
     base.setHours(0, 0, 0, 0);
@@ -1872,28 +2246,21 @@
     for (var k = 0; k < 7; k++) {
       var d = new Date(base.getTime());
       d.setDate(base.getDate() + k);
-      var dayEnd = new Date(d.getTime() + 86400000);
-      var dayEvents = visibleEvents().map(function (e) { return { t:new Date(e.start), e:e }; })
-        .filter(function (o) { return o.t >= d && o.t < dayEnd; })
-        .sort(function (a, b) { return a.t - b.t; });
+      var dayEvents = eventsBetween(d, new Date(d.getTime() + 86400000));
 
       var sec = el("div", "day");
       var hrow = el("div");
       hrow.style.cssText = "display:flex;align-items:baseline;gap:10px;";
       hrow.appendChild(el("h3", "serif",
         prettyDay(d) + (planOffset === 0 && k === 0 ? " \u00B7 today" : "")));
-      (function (dayDate) {
+      (function (dayDate, section, headRow) {
         var plus = el("button", "btn quiet", "+");
         plus.title = "Add an event on this day";
         plus.setAttribute("aria-label", "Add an event on " + prettyDay(dayDate));
-        plus.onclick = function () {
-          if (!db.calendars.length) { localCalendar(); save(); }
-          var slot = el("div");
-          sec.insertBefore(slot, hrow.nextSibling);
-          slot.appendChild(eventForm(null, new Date(dayDate.getTime()), function () { slot.remove(); }));
-        };
-        hrow.appendChild(plus);
-      })(new Date(d.getTime()));
+        plus.onclick = function () { openAdder(dayDate, section, headRow); };
+        headRow.appendChild(plus);
+        dropTarget(section, dayDate);
+      })(new Date(d.getTime()), sec, hrow);
       sec.appendChild(hrow);
 
       var showedTasks = false;
@@ -1903,41 +2270,25 @@
         firsts.forEach(function (i) { sec.appendChild(taskRow(i, render)); });
       }
       dayEvents.forEach(function (o) {
-        var r = el("div", "ev");
-        var stamp = o.e.allDay ? "all day"
-          : o.t.toLocaleTimeString(undefined, { hour:"2-digit", minute:"2-digit" }) +
-            (o.e.end ? "\u2013" + new Date(o.e.end).toLocaleTimeString(undefined,
-              { hour:"2-digit", minute:"2-digit" }) : "");
-        var tEl = el("time", null, stamp);
+        var on = evDone(o.e.id);
+        var r = el("div", "ev" + (on ? " evdone" : ""));
+        r.appendChild(tickBox(on, function () { toggleEvDone(o.e.id); render(); }, o.e.title))
+         .style.marginTop = "3px";
+        var tEl = el("time", null, timeStamp(o));
         if (!o.e.allDay && o.e.end) tEl.style.minWidth = "110px";
         r.appendChild(tEl);
-        (function (ev) {
-          var d2 = el("button", "dot");
-          d2.style.background = eventColor(ev);
-          d2.style.marginTop = "5px";
-          var c = calById(ev.calId);
-          d2.title = (c ? c.name + " \u2014 " : "") + "click to recolour";
-          d2.setAttribute("aria-label", "Colour for " + ev.title);
-          d2.onclick = function (e) {
-            e.stopPropagation();
-            openSwatches(d2, eventColor(ev), function (col) {
-              db.eventColors[ev.id] = col; save(); render();
-            }, function () {
-              delete db.eventColors[ev.id]; save(); render();
-            });
-          };
-          r.appendChild(d2);
-        })(o.e);
-        (function (ev) {
+        r.appendChild(colourDot(o.e, "5px"));
+        (function (ev, row) {
           var t = el("button", "evtitle", ev.title);
-          if (ev.edited) r.classList.add("edited");
-          t.onclick = function () {
-            var slot = el("div");
-            sec.insertBefore(slot, r.nextSibling);
-            slot.appendChild(eventForm(ev, null, function () { slot.remove(); }));
-          };
-          r.appendChild(t);
-        })(o.e);
+          if (ev.edited) row.classList.add("edited");
+          t.onclick = function () { openEditor(ev, sec, row); };
+          row.appendChild(t);
+          var xe = el("button", "x", "\u00D7");
+          xe.title = "Remove this event";
+          xe.setAttribute("aria-label", "Remove " + ev.title);
+          xe.onclick = function (e) { e.stopPropagation(); deleteEvent(ev); };
+          row.appendChild(xe);
+        })(o.e, r);
         sec.appendChild(r);
       });
       if (!dayEvents.length && !showedTasks) sec.appendChild(el("p", "dim", "Nothing scheduled."));
@@ -2096,15 +2447,16 @@
     if (view === "sheet") { renderSheet(root); return; }
 
     var wrapEl = el("div", "wrap");
+    if (view === "plan") wrapEl.style.maxWidth = planMode === "month" ? "1240px" : "1040px";
     var head = { dump:"Brain dump", notes:"Notes", journal:"Journal", plan:"Plan" };
     var h1 = el("h1", "big serif", head[view]);
     wrapEl.appendChild(h1);
     var subs = {
-      dump: pending ? pending + " still to sort. Get it all out first, sort after."
-                    : "Get it all out first \u2014 no order, no filtering.",
+      dump: pending ? pending + " still to sort."
+                    : "Write everything down, then sort it.",
       notes: "Things worth keeping.",
-      journal: "One entry a day. Nobody's reading it.",
-      plan: "Your week, plus whatever you put in Do first."
+      journal: "One entry a day.",
+      plan: "Your week, plus anything in Do first."
     };
     wrapEl.appendChild(el("p", "sub", subs[view]));
     if (view === "dump") viewDump(wrapEl);
