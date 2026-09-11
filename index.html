@@ -627,6 +627,8 @@
     title.value = ev ? ev.title : "";
     box.appendChild(title);
 
+    var endAt = (ev && ev.end) ? new Date(ev.end) : new Date(start.getTime() + 3600000);
+
     var rowA = el("div", "evrow");
     var date = el("input", "flat");
     date.type = "date";
@@ -635,14 +637,39 @@
     time.type = "time";
     time.value = String(start.getHours()).padStart(2, "0") + ":" +
                  String(start.getMinutes()).padStart(2, "0");
+    var dash = el("span", "tiny", "to");
+    var endTime = el("input", "flat");
+    endTime.type = "time";
+    endTime.value = String(endAt.getHours()).padStart(2, "0") + ":" +
+                    String(endAt.getMinutes()).padStart(2, "0");
+
     var allDayWrap = el("label", "tiny");
     var allDay = el("input");
     allDay.type = "checkbox";
     allDay.checked = ev ? !!ev.allDay : false;
-    allDay.onchange = function () { time.disabled = allDay.checked; };
-    time.disabled = allDay.checked;
+    function syncDisabled() {
+      time.disabled = allDay.checked;
+      endTime.disabled = allDay.checked;
+      dash.style.opacity = allDay.checked ? ".4" : "1";
+    }
+    allDay.onchange = syncDisabled;
+    syncDisabled();
+
+    // keep the gap when you shift the start
+    var lastStart = time.value;
+    time.onchange = function () {
+      if (allDay.checked || !endTime.value) { lastStart = time.value; return; }
+      var was = lastStart.split(":"), now = time.value.split(":"), had = endTime.value.split(":");
+      var shift = ((+now[0] * 60 + +now[1]) - (+was[0] * 60 + +was[1]));
+      var mins = (+had[0] * 60 + +had[1]) + shift;
+      mins = ((mins % 1440) + 1440) % 1440;
+      endTime.value = String(Math.floor(mins / 60)).padStart(2, "0") + ":" +
+                      String(mins % 60).padStart(2, "0");
+      lastStart = time.value;
+    };
+
     allDayWrap.append(allDay, document.createTextNode(" all day"));
-    rowA.append(date, time, allDayWrap);
+    rowA.append(date, time, dash, endTime, allDayWrap);
     box.appendChild(rowA);
 
     var pick = el("select", "flat");
@@ -670,8 +697,16 @@
         var hm = time.value.split(":");
         d.setHours(+hm[0], +hm[1], 0, 0);
       }
+      var endISO = null;
+      if (!allDay.checked && endTime.value) {
+        var eh = endTime.value.split(":");
+        var e2 = new Date(d.getTime());
+        e2.setHours(+eh[0], +eh[1], 0, 0);
+        if (e2 <= d) e2 = new Date(e2.getTime() + 86400000);  // ran past midnight
+        endISO = e2.toISOString();
+      }
       var calId = pick.value === "__new" ? localCalendar().id : pick.value;
-      saveEvent(ev, { title:t, start:d.toISOString(), end:null,
+      saveEvent(ev, { title:t, start:d.toISOString(), end:endISO,
                       allDay:allDay.checked, calId:calId });
     };
     actions.appendChild(ok);
@@ -1869,8 +1904,13 @@
       }
       dayEvents.forEach(function (o) {
         var r = el("div", "ev");
-        r.appendChild(el("time", null, o.e.allDay ? "all day" :
-          o.t.toLocaleTimeString(undefined, { hour:"2-digit", minute:"2-digit" })));
+        var stamp = o.e.allDay ? "all day"
+          : o.t.toLocaleTimeString(undefined, { hour:"2-digit", minute:"2-digit" }) +
+            (o.e.end ? "\u2013" + new Date(o.e.end).toLocaleTimeString(undefined,
+              { hour:"2-digit", minute:"2-digit" }) : "");
+        var tEl = el("time", null, stamp);
+        if (!o.e.allDay && o.e.end) tEl.style.minWidth = "110px";
+        r.appendChild(tEl);
         (function (ev) {
           var d2 = el("button", "dot");
           d2.style.background = eventColor(ev);
